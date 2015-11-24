@@ -9,9 +9,11 @@ import warnings
 
 # Imports for the custom kernels
 from astropy.modeling.models import Ellipse2D, Gaussian2D
-from astropy.modeling.utils import ellipse_extent
 from astropy.convolution import Kernel2D
 from astropy.convolution.kernels import _round_up_to_odd_integer
+
+# from astropy.modeling.utils import ellipse_extent
+from .utils import ellipse_extent
 
 # Conversion between a twod Gaussian FWHM**2 and effective area
 FWHM_TO_AREA = 2*np.pi/(8*np.log(2))
