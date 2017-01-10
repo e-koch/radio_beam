@@ -543,10 +543,17 @@ class Beam(u.Quantity):
         warnings.warn("as_kernel is not aware of any misaligment "
                       " between pixel and world coordinates")
 
-        stddev_maj = (self.major.to(u.deg)/(pixscale.to(u.deg) *
-                                            SIGMA_TO_FWHM)).decompose()
-        stddev_min = (self.minor.to(u.deg)/(pixscale.to(u.deg) *
-                                            SIGMA_TO_FWHM)).decompose()
+        # Ensure the kernel is at least Nyquist sampled.
+        fwhm_maj = self.major.to(u.deg) / pixscale.to(u.deg)
+        fwhm_min = self.minor.to(u.deg) / pixscale.to(u.deg)
+
+        if fwhm_maj.value < 2.0 or fwhm_min.value < 2.0:
+            raise ValueError("The kernel is not Nyquist sampled at this "
+                             "pixel scale (FWHM major={0}, minor={1})."
+                             .format(fwhm_maj.value, fwhm_min.value))
+
+        stddev_maj = (fwhm_maj / SIGMA_TO_FWHM).decompose()
+        stddev_min = (fwhm_min / SIGMA_TO_FWHM).decompose()
 
         # position angle is defined as CCW from north
         # "angle" is conventionally defined as CCW from "west".
@@ -594,13 +601,16 @@ class Beam(u.Quantity):
         min_eff = gauss_to_top * self.minor.to(u.deg) / \
             (pixscale * SIGMA_TO_FWHM)
 
+        if maj_eff.value < 1.0 or min_eff.value < 1.0:
+            raise ValueError("The kernel widths are smaller than 1 pixel.")
+
         return EllipticalTophat2DKernel(maj_eff.value, min_eff.value,
                                         self.pa.to(u.radian).value, **kwargs)
 
     def to_header_keywords(self):
         return {'BMAJ': self.major.to(u.deg).value,
                 'BMIN': self.minor.to(u.deg).value,
-                'BPA':  self.pa.to(u.deg).value,
+                'BPA': self.pa.to(u.deg).value,
                 }
 
 

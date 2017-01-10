@@ -44,3 +44,21 @@ def test_tophat_kernel():
                                             0.0)
 
     npt.assert_allclose(kernel.array, direct_kernel.array)
+
+
+@pytest.mark.skipif(parse_version(version) < min_astropy_version,
+                    reason="Must have astropy version >1.1")
+def test_catch_subpixel_kernel_width():
+
+    fake_beam = radio_beam.Beam(1 * u.deg)
+
+    # Slightly below Nyquist sampled
+    pixscale = 0.51 * u.deg
+
+    with pytest.raises(ValueError):
+        kernel = fake_beam.as_kernel(pixscale)
+
+    # Now use the marginal case
+    pixscale = 0.5 * u.deg
+
+    kernel = fake_beam.as_kernel(pixscale)
