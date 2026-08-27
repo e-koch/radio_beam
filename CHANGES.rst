@@ -1,5 +1,6 @@
 0.3.8 (unreleased)
 ------------------
+- Add `Beam.pixels_per_beam` and `Beams.pixels_per_beam` for converting between beam area and pixel area given a WCS (#109)
 
 
 0.3.7 (2023-12-07)

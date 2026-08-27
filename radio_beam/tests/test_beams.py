@@ -51,6 +51,25 @@ def test_beam_areas():
     assert np.all(beams.value == beams.sr.value)
 
 
+def test_beams_pixels_per_beam():
+
+    from astropy import wcs as apwcs
+
+    beams = symm_beams_for_tests()[0]
+
+    mywcs = apwcs.WCS(naxis=2)
+    mywcs.wcs.ctype = ['RA---TAN', 'DEC--TAN']
+    mywcs.wcs.cdelt = [-0.2 / 3600., 0.2 / 3600.]  # 0.2 arcsec pixels
+
+    pixel_area = apwcs.utils.proj_plane_pixel_area(mywcs) * u.deg**2
+
+    expected = (beams.sr / pixel_area).to(u.dimensionless_unscaled).value
+
+    ppbeam = beams.pixels_per_beam(mywcs)
+
+    npt.assert_allclose(ppbeam, expected)
+
+
 def test_beams_from_fits_bintable():
 
     fname = data_path("m33_beams_bintable.fits.gz")
