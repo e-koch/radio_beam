@@ -55,6 +55,12 @@ def test_beams_pixels_per_beam():
 
     from astropy import wcs as apwcs
 
+    # symm_beams_for_tests circular beam majors: [1, 1, 1, 2, 3, 4] arcsec.
+    # With 0.2" pixels, each beam FWHM spans major/0.2 pixels across, so
+    # the naive pixels-per-beam-area is (major/0.2)**2 =
+    # [25, 25, 25, 100, 225, 400]. The actual value is larger by the
+    # Gaussian beam solid-angle prefactor 2*pi/(8*ln(2)) ~= 1.133, giving
+    # ~[28.3, 28.3, 28.3, 113.3, 254.9, 453.2].
     beams = symm_beams_for_tests()[0]
 
     mywcs = apwcs.WCS(naxis=2)

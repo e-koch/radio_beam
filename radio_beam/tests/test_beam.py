@@ -145,6 +145,12 @@ def test_pixels_per_beam():
 
     from astropy.wcs import WCS
 
+    # 1" circular beam with 0.2" pixels: the beam FWHM spans
+    # 1" / 0.2" = 5 pixels across, so the naive pixels-per-beam-area
+    # is 5**2 = 25. The actual value is larger by the Gaussian beam
+    # solid-angle prefactor 2*pi / (8*ln(2)) ~= 1.133, i.e.
+    # ~28.3 = 25 * 1.133, since a Gaussian beam covers more area than
+    # its FWHM^2 footprint.
     beam = Beam(1 * u.arcsec, 1 * u.arcsec, 0 * u.deg)
 
     mywcs = WCS(naxis=2)
@@ -153,6 +159,7 @@ def test_pixels_per_beam():
 
     pixel_area = wcs.utils.proj_plane_pixel_area(mywcs) * u.deg**2
 
+    # (beam.sr / pixel_area) == (1/0.2)**2 * 2*pi/(8*ln(2)) ~= 28.33
     expected = (beam.sr / pixel_area).to(u.dimensionless_unscaled).value
 
     ppbeam = beam.pixels_per_beam(mywcs)
