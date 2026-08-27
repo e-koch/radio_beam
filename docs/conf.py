@@ -36,10 +36,6 @@ except ImportError:
     print('ERROR: the documentation requires the sphinx-astropy package to be installed')
     sys.exit(1)
 
-# Get configuration information from setup.cfg
-from configparser import ConfigParser
-conf = ConfigParser()
-
 package_info = metadata.metadata("radio-beam")
 
 # -- General configuration ----------------------------------------------------
