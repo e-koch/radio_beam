@@ -21,6 +21,40 @@ will have a very small effect on the size of the common beam.
 The implementation in radio-beam is adapted from `a generalized python implementation <https://github.com/minillinim/ellipsoid/blob/master/ellipsoid.py>`_ and `the original matlab version <http://www.mathworks.com/matlabcentral/fileexchange/9542>`_ written by Nima Moshtagh (see accompanying paper `here <http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.116.7691&rep=rep1&type=pdf>`__).
 
 
+Calculating a common beam from a list of 2D images
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Given a list of 2D images (e.g., moment maps or continuum images) with different
+beams, build a `~radio_beam.Beams` object from their individual beams and use
+`~radio_beam.Beams.common_beam` to find the smallest enclosing beam::
+
+   >>> from radio_beam import Beams, Beam
+   >>> from spectral_cube import Projection
+   >>> from astropy.io import fits
+
+   >>> filenames = ['image1.fits', 'image2.fits', 'image3.fits'] # doctest: +SKIP
+   >>> images = [Projection.from_hdu(fits.open(filename)) for filename in filenames] # doctest: +SKIP
+   >>> beams = Beams(beams=[image.beam for image in images]) # doctest: +SKIP
+
+   >>> common_beam = beams.common_beam() # doctest: +SKIP
+
+If you only need the beam information and not the image data, the beams can be
+read directly from the CASA image or FITS header without loading the full
+image::
+
+   >>> beam_list = [Beam.from_casa_image(filename) for filename in filenames] # doctest: +SKIP
+   >>> beam_list = [Beam.from_fits_header(fits.getheader(filename)) for filename in filenames] # doctest: +SKIP
+
+   >>> beams = Beams(beams=beam_list) # doctest: +SKIP
+   >>> common_beam = beams.common_beam() # doctest: +SKIP
+
+.. note::
+   For CASA images with a redundant degenerate spectral/Stokes axis, load
+   the image as a `~spectral_cube.SpectralCube` and take the beam from a
+   single channel (e.g., ``cube.beam`` or ``cube.beams[0]``) rather than
+   using `~spectral_cube.Projection.from_hdu` directly.
+
+
 Convolution to a common resolution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The typical use case for calculating a common beam is to convolve one or more
