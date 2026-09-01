@@ -119,6 +119,12 @@ class Beams(u.Quantity):
         return self.__getitem__(slice(start, stop, increment))
 
     def __getitem__(self, view):
+        # numpy passes a length-1 tuple, e.g. (slice(...),), when indexing
+        # a 1D array via `arr[key]` from within other __getitem__
+        # implementations (see radio-astro-tools/radio-beam#110).
+        if isinstance(view, tuple) and len(view) == 1:
+            view = view[0]
+
         if isinstance(view, (int, np.int64)):
             return Beam(major=self.major[view],
                         minor=self.minor[view],

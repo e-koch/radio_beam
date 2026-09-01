@@ -243,6 +243,18 @@ def test_indexing():
     assert hasattr(beams[mask], 'major')
     assert np.all(beams[mask].major.value == majors[mask].value)
 
+    # Regression test for https://github.com/radio-astro-tools/radio-beam/issues/110
+    # A length-1 tuple key (as numpy passes internally from other
+    # __getitem__ implementations) should behave like the unwrapped key.
+    assert hasattr(beams[(slice(0, 3),)], 'major')
+    assert np.all(beams[(slice(0, 3),)].major.value == majors[:3].value)
+
+    assert hasattr(beams[(3,)], 'major')
+    assert beams[(3,)].major.value == 2
+
+    assert hasattr(beams[(mask,)], 'major')
+    assert np.all(beams[(mask,)].major.value == majors[mask].value)
+
 
 def test_average_beams():
 
