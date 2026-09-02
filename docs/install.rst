@@ -9,6 +9,7 @@ This package has the following dependencies:
 * `Python <http://www.python.org>`_ 3.10 or later
 * `Numpy <http://www.numpy.org>`_ 1.24 or later
 * `Astropy <http://www.astropy.org>`__ 6.1 or later
+* `scipy <https://scipy.org>`_ 1.8 or later
 * `matplotlib <https://matplotlib.org>`_ 3.5 or later
 
 Installation

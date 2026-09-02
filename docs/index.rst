@@ -60,6 +60,19 @@ To create an elliptical beam, the minor FWHM and position angle need to be given
     >>> my_beam_ellip
     Beam: BMAJ=0.5 arcsec BMIN=0.25 arcsec BPA=30.0 deg
 
+A circular beam can also be created directly from a solid angle using the ``area`` keyword::
+
+    >>> my_beam_from_area = Beam(area=0.28327251 * u.arcsec**2) # doctest: +FLOAT_CMP
+    >>> my_beam_from_area # doctest: +FLOAT_CMP
+    Beam: BMAJ=0.5 arcsec BMIN=0.5 arcsec BPA=0.0 deg
+
+Whether a beam is circular can be checked with `~radio_beam.Beam.iscircular`::
+
+    >>> bool(my_beam.iscircular())
+    True
+    >>> bool(my_beam_ellip.iscircular())
+    False
+
 The beam area in steradians is::
 
     >>> my_beam_ellip.sr # doctest: +FLOAT_CMP
