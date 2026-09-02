@@ -512,6 +512,28 @@ class Beam(u.Quantity):
     def beamarea_equiv(self):
         return u.beam_angular_area(self.sr)
 
+    def pixels_per_beam(self, mywcs):
+        """
+        Return the number of pixels covering the beam area, given a
+        `~astropy.wcs.WCS` defining the pixel scale.
+
+        This is useful for converting between Jy/beam and Jy/pixel:
+        ``flux_jy_pix = flux_jy_beam / beam.pixels_per_beam(mywcs)``.
+
+        Parameters
+        ----------
+        mywcs : `~astropy.wcs.WCS`
+            The spatial WCS defining the pixel scale (e.g., the celestial
+            WCS of a cube or image).
+
+        Returns
+        -------
+        pixels_per_beam : float
+            The number of pixels covered by the beam's solid angle.
+        """
+        pixel_area = wcs.utils.proj_plane_pixel_area(mywcs) * u.deg**2
+        return float((self.sr / pixel_area).to(u.dimensionless_unscaled).value)
+
     def commonbeam_with(self, other_beam):
         """
         Solve for the common beam with a given `~radio_beam.Beam`.

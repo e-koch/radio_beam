@@ -99,6 +99,28 @@ To get the value of 1 Jy in K for a given beam::
     >>> my_beam.jtok(25*u.GHz) # doctest: +FLOAT_CMP
     <Quantity 7821.572919292681 K>
 
+Converting between Jy/beam and Jy/pixel (e.g., for regridded or resampled data)
+requires knowing how many pixels cover the beam area. Given the
+`~astropy.wcs.WCS` of an image or cube, `~radio_beam.Beam.pixels_per_beam`
+returns this value::
+
+    >>> from astropy.wcs import WCS
+    >>> mywcs = WCS(naxis=2)
+    >>> mywcs.wcs.ctype = ['RA---TAN', 'DEC--TAN']
+    >>> mywcs.wcs.cdelt = [-0.1 / 3600., 0.1 / 3600.]  # 0.1 arcsec pixels
+    >>> my_beam_ellip.pixels_per_beam(mywcs) # doctest: +FLOAT_CMP
+    14.16362544321
+
+The flux density per beam can then be converted to flux density per pixel::
+
+    >>> flux_jy_beam = 1 * u.Jy
+    >>> flux_jy_pix = flux_jy_beam / my_beam_ellip.pixels_per_beam(mywcs)
+    >>> flux_jy_pix # doctest: +FLOAT_CMP
+    <Quantity 0.07060339 Jy>
+
+The equivalent `~radio_beam.Beams.pixels_per_beam` method works for a
+`~radio_beam.Beams` set, returning an array with one value per beam.
+
 Two beams can be convolved::
 
     >>> my_asymmetric_beam = Beam(0.75*u.arcsec, 0.25*u.arcsec, 0*u.deg)

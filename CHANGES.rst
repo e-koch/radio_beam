@@ -1,6 +1,7 @@
 0.3.10 (unreleased)
 -------------------
 - Update minimum package dependencies in docs (#138)
+- Add `Beam.pixels_per_beam` and `Beams.pixels_per_beam` for converting between beam area and pixel area given a WCS (#150)
 
 0.3.9 (2025-06-10)
 ------------------

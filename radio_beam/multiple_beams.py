@@ -172,6 +172,25 @@ class Beams(u.Quantity):
     def sr(self):
         return _to_area(self.major, self.minor)
 
+    def pixels_per_beam(self, mywcs):
+        """
+        Return the number of pixels covering the beam area of each beam,
+        given a `~astropy.wcs.WCS` defining the pixel scale.
+
+        Parameters
+        ----------
+        mywcs : `~astropy.wcs.WCS`
+            The spatial WCS defining the pixel scale (e.g., the celestial
+            WCS of a cube or image).
+
+        Returns
+        -------
+        pixels_per_beam : `~numpy.ndarray`
+            The number of pixels covered by each beam's solid angle.
+        """
+        pixel_area = wcs.utils.proj_plane_pixel_area(mywcs) * u.deg**2
+        return (self.sr / pixel_area).to(u.dimensionless_unscaled).value
+
     @classmethod
     def from_fits_bintable(cls, bintable):
         """
