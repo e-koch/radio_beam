@@ -1,6 +1,19 @@
-0.3.8 (unreleased)
-------------------
+0.3.10 (unreleased)
+-------------------
+- Update minimum package dependencies in docs (#138)
 
+0.3.9 (2025-06-10)
+------------------
+- Add ``kwargs`` support to `~radio_beam.Beam.ellipse_to_plot` (#123)
+- Escape LaTeX special characters in error/test strings, for Python 3.12+ compatibility (#132)
+- CI and packaging maintenance (#136)
+
+0.3.8 (2024-10-18)
+------------------
+- Fix a `~radio_beam.Beams` regression triggered by astropy issue #17096 (#128)
+- Fix ``distutils`` deprecation under Python 3.12 (#124)
+- Remove unused ``six``/Python 2 compatibility code (#125)
+- CI and dependency maintenance (#126)
 
 0.3.7 (2023-12-07)
 ------------------
