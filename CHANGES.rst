@@ -1,7 +1,9 @@
-0.3.10 (unreleased)
+0.3.10 (2026-09-03)
 -------------------
 - Update minimum package dependencies in docs (#138)
 - Add `Beam.pixels_per_beam` and `Beams.pixels_per_beam` for converting between beam area and pixel area given a WCS (#150)
+- Fix ``Beams.__getitem__`` raising ``ValueError`` on length-1 tuple keys (#152)
+- Switch PyPI publishing to trusted publishing (OIDC) (#154)
 
 0.3.9 (2025-06-10)
 ------------------
